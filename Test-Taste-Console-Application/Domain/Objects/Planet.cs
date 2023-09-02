@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using Test_Taste_Console_Application.Domain.DataTransferObjects;
 
 namespace Test_Taste_Console_Application.Domain.Objects
@@ -12,7 +13,19 @@ namespace Test_Taste_Console_Application.Domain.Objects
         public ICollection<Moon> Moons { get; set; }
         public float AverageMoonGravity
         {
-            get => 0.0f;
+            get
+            {
+                float averageMoonGravity = 0.0f;
+                if (Moons != null && Moons.Count > 0)
+                {
+                    // Calculate the sum of moon gravities
+                    float totalMoonGravity = Moons.Sum(moon => moon.Gravity);
+
+                    // Calculate the average moon gravity
+                    averageMoonGravity = totalMoonGravity / Moons.Count;
+                }
+                return averageMoonGravity;
+            }
         }
 
         public Planet(PlanetDto planetDto)
@@ -20,7 +33,7 @@ namespace Test_Taste_Console_Application.Domain.Objects
             Id = planetDto.Id;
             SemiMajorAxis = planetDto.SemiMajorAxis;
             Moons = new Collection<Moon>();
-            if(planetDto.Moons != null)
+            if (planetDto.Moons != null)
             {
                 foreach (MoonDto moonDto in planetDto.Moons)
                 {
